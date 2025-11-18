@@ -6,23 +6,15 @@
 //
 
 import UIKit
-import SpriteKit
-import GameplayKit
+import SwiftUI
 
-class GameViewController: UIViewController {
+class GameViewController: UIHostingController<MainGameView> {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let scene = GameScene.newGameScene()
-
-        // Present the scene
-        let skView = self.view as! SKView
-        skView.presentScene(scene)
-        
-        skView.ignoresSiblingOrder = true
-        skView.showsFPS = true
-        skView.showsNodeCount = true
+        // Set root view to MainGameView
+        rootView = MainGameView()
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -34,6 +26,6 @@ class GameViewController: UIViewController {
     }
 
     override var prefersStatusBarHidden: Bool {
-        return true
+        return false
     }
 }
