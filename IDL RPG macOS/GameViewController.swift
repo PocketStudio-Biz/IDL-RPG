@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import SwiftUI
 import SpriteKit
 import GameplayKit
 
@@ -14,22 +15,21 @@ class GameViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let scene = GameScene.newGameScene()
+        // Initialize the main game view with SwiftUI
+        let mainGameView = MainGameView()
+        let hostingController = NSHostingController(rootView: mainGameView)
         
-        // Present the scene
-        let skView = self.view as! SKView
-        skView.presentScene(scene)
+        // Add hosting controller as child
+        addChild(hostingController)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(hostingController.view)
         
-        skView.ignoresSiblingOrder = true
-        
-        #if DEBUG
-        skView.showsFPS = true
-        skView.showsNodeCount = true
-        #else
-        skView.showsFPS = false
-        skView.showsNodeCount = false
-        #endif
+        // Set constraints to fill the window
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
     }
-
 }
-

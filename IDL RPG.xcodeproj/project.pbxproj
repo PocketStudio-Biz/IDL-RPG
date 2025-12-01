@@ -18,7 +18,6 @@
 				Actions.sks,
 				Assets.xcassets,
 				GameScene.sks,
-				GameScene.swift,
 			);
 			target = A46185C72ECC4C8A009B89A6 /* IDL RPG iOS */;
 		};
@@ -28,7 +27,6 @@
 				Actions.sks,
 				Assets.xcassets,
 				GameScene.sks,
-				GameScene.swift,
 			);
 			target = A46185D82ECC4C8A009B89A6 /* IDL RPG macOS */;
 		};

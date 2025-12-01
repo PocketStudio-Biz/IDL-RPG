@@ -48,8 +48,9 @@ class BattleScene: SKScene {
         
         guard let player = player else { return }
         
-        // Create player sprite (placeholder - use actual sprite if available)
-        let playerSprite = SKSpriteNode(color: SKColor.blue, size: CGSize(width: 60, height: 60))
+        // Create player sprite using generated texture
+        let playerSprite = SKSpriteNode(texture: .player)
+        playerSprite.size = CGSize(width: 80, height: 80)
         playerSprite.position = CGPoint(x: size.width * 0.25, y: size.height / 2)
         playerSprite.zPosition = 1
         addChild(playerSprite)
@@ -59,12 +60,13 @@ class BattleScene: SKScene {
         let playerLabel = SKLabelNode(text: player.name)
         playerLabel.fontSize = 16
         playerLabel.fontColor = SKColor.white
-        playerLabel.position = CGPoint(x: 0, y: -40)
+        playerLabel.position = CGPoint(x: 0, y: -50)
         playerSprite.addChild(playerLabel)
         
         if let enemy = enemy {
-            // Create enemy sprite
-            let enemySprite = SKSpriteNode(color: SKColor.red, size: CGSize(width: 60, height: 60))
+            // Create enemy sprite using generated texture
+            let enemySprite = SKSpriteNode(texture: .enemy)
+            enemySprite.size = CGSize(width: 80, height: 80)
             enemySprite.position = CGPoint(x: size.width * 0.75, y: size.height / 2)
             enemySprite.zPosition = 1
             addChild(enemySprite)
@@ -74,7 +76,7 @@ class BattleScene: SKScene {
             let enemyLabel = SKLabelNode(text: enemy.name)
             enemyLabel.fontSize = 16
             enemyLabel.fontColor = SKColor.white
-            enemyLabel.position = CGPoint(x: 0, y: -40)
+            enemyLabel.position = CGPoint(x: 0, y: -50)
             enemySprite.addChild(enemyLabel)
         }
         
@@ -124,6 +126,9 @@ class BattleScene: SKScene {
             return
         }
         
+        // Play sound
+        SoundManager.shared.playAttack()
+        
         let originalPosition = playerNode.position
         let attackPosition = CGPoint(x: originalPosition.x + 30, y: originalPosition.y)
         
@@ -143,6 +148,9 @@ class BattleScene: SKScene {
             return
         }
         
+        // Play sound
+        SoundManager.shared.playAttack()
+        
         let originalPosition = enemyNode.position
         let attackPosition = CGPoint(x: originalPosition.x - 30, y: originalPosition.y)
         
@@ -157,6 +165,9 @@ class BattleScene: SKScene {
     
     /// Shows damage number
     func showDamage(_ amount: Int, at position: CGPoint, isPlayer: Bool) {
+        // Play hit sound
+        SoundManager.shared.playDamage()
+        
         let damageLabel = SKLabelNode(text: "-\(amount)")
         damageLabel.fontSize = 20
         damageLabel.fontColor = isPlayer ? SKColor.red : SKColor.orange
