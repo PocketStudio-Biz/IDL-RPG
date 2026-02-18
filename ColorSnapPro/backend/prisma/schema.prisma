@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  username      String    @unique
+  passwordHash  String    @map("password_hash")
+  displayName   String?   @map("display_name")
+  avatarUrl     String?   @map("avatar_url")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  palettes      Palette[]
+  colorHistory  ColorHistory[]
+  favoriteColors FavoriteColor[]
+  
+  @@map("users")
+}
+
+model Palette {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  name          String
+  description   String?
+  isPublic      Boolean   @default(false) @map("is_public")
+  thumbnailUrl  String?   @map("thumbnail_url")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  colors        Color[]
+  
+  @@map("palettes")
+}
+
+model Color {
+  id                String    @id @default(uuid())
+  paletteId         String    @map("palette_id")
+  hexValue          String    @map("hex_value")
+  rgbR              Int       @map("rgb_r")
+  rgbG              Int       @map("rgb_g")
+  rgbB              Int       @map("rgb_b")
+  hslH              Float     @map("hsl_h")
+  hslS              Float     @map("hsl_s")
+  hslL              Float     @map("hsl_l")
+  name              String?
+  extractedFromImage String?  @map("extracted_from_image")
+  position          Int       @default(0)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  
+  palette           Palette   @relation(fields: [paletteId], references: [id], onDelete: Cascade)
+  
+  @@map("colors")
+}
+
+model ColorHistory {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  hexValue      String    @map("hex_value")
+  rgbR          Int       @map("rgb_r")
+  rgbG          Int       @map("rgb_g")
+  rgbB          Int       @map("rgb_b")
+  sourceType    String    @map("source_type")
+  sourceImage   String?   @map("source_image")
+  extractedAt   DateTime  @default(now()) @map("extracted_at")
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("color_history")
+}
+
+model FavoriteColor {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  hexValue      String    @map("hex_value")
+  rgbR          Int       @map("rgb_r")
+  rgbG          Int       @map("rgb_g")
+  rgbB          Int       @map("rgb_b")
+  name          String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, hexValue])
+  @@map("favorite_colors")
+}
